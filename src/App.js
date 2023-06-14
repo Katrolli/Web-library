@@ -4,7 +4,7 @@ import LoginPage from './Login/Login';
 import { BrowserRouter, Route, Routes,Navigate } from 'react-router-dom';
 import { useContext } from 'react';
 import { AuthContext } from './Auth/AuthContext';
-import Books from './Components/Books';
+import Home from './Components/Home';
 
 
 function App() {
@@ -19,10 +19,10 @@ function App() {
           <Routes>
             {isAuthenticated ?  
               <>
-                <Route path="/books" element={<Books />} /> 
+                <Route path="/home" element={<Home />} /> 
                 <Route
                   path="*"
-                  element={<Navigate to="/books" />}
+                  element={<Navigate to="/home" />}
                 />
               </>
               : 

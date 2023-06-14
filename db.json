@@ -24,38 +24,61 @@
       "username": "Ennio",
       "password": "12344",
       "id": 5
+    },
+    {
+      "username": "Ennio",
+      "password": "12344",
+      "id": 6
+    },
+    {
+      "username": "Ennio",
+      "password": "12344",
+      "id": 7
+    },
+    {
+      "username": "Ennio",
+      "password": "12344",
+      "id": 8
+    },
+    {
+      "username": "Ennio",
+      "password": "12344",
+      "id": 9
+    },
+    {
+      "username": "Ennio",
+      "password": "12344",
+      "id": 10
+    },
+    {
+      "username": "Ennio",
+      "password": "12344",
+      "id": 11
+    },
+    {
+      "username": "Ennio",
+      "password": "12344",
+      "id": 12
+    },
+    {
+      "username": "Ennio",
+      "password": "12344",
+      "id": 13
     }
   ],
   "books": [
     {
-      "title": "newbook",
-      "category": "newauthor",
-      "author": "newcat",
+      "title": "Bookname",
+      "category": "BookCategory",
+      "author": "Bookauthor",
       "id": 1
-    },
+    }
+  ],
+  "authors": [
     {
-      "title": "newbook",
-      "category": "newauthor",
-      "author": "newcat",
-      "id": 2
-    },
-    {
-      "title": "newbook",
-      "category": "newauthor",
-      "author": "newcat",
-      "id": 3
-    },
-    {
-      "title": "newbook",
-      "category": "newauthor",
-      "author": "newcat",
-      "id": 4
-    },
-    {
-      "title": "newbook",
-      "category": "newauthor",
-      "author": "newcat",
-      "id": 5
+      "name": "name",
+      "bio": "bio",
+      "id": 1
     }
   ]
 }

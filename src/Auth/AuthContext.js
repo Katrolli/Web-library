@@ -30,8 +30,6 @@ const AuthProvider = ({ children }) => {
     setUser((prevState) => ({ ...prevState, [key]: value }));
   };
 
-  console.log(user, 'user32')
-
 
   const values = { user, setUser, setAuthData};
 
