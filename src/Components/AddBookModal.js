@@ -45,14 +45,19 @@ function AddBookModal({ isOpen, onClose, onSubmit }) {
 
   return (
     <Modal isOpen={isOpen} onClose={onClose}>
-      <div className="text-black">
+      <div className="text-black flex flex-col">
+        <div className=" justify-center text-center">
+          <p className="text-white">Create a new book</p>
+        </div>
         <form
+          className="space-y-4"
           onSubmit={(e) => {
             e.preventDefault();
             onSubmit(e, title, description, authors);
           }}
         >
           <input
+            className="w-full p-2 border-2 border-gray-300 rounded-md"
             type="text"
             value={title}
             onChange={(e) => setTitle(e.target.value)}
@@ -60,6 +65,7 @@ function AddBookModal({ isOpen, onClose, onSubmit }) {
             placeholder="Title"
           />
           <input
+            className="w-full p-2 border-2 border-gray-300 rounded-md"
             type="text"
             value={description}
             onChange={(e) => setDescription(e.target.value)}
@@ -67,6 +73,7 @@ function AddBookModal({ isOpen, onClose, onSubmit }) {
             placeholder="Description"
           />
           <select
+            className="w-full p-2 border-2 border-gray-300 rounded-md"
             value={categoryId}
             onChange={(e) => setCategoryId([parseInt(e.target.value)])}
             required
@@ -79,6 +86,7 @@ function AddBookModal({ isOpen, onClose, onSubmit }) {
             ))}
           </select>
           <select
+            className="w-full p-2 border-2 border-gray-300 rounded-md"
             value={authorId}
             onChange={(e) => setAuthorId([parseInt(e.target.value)])}
             required
@@ -90,7 +98,10 @@ function AddBookModal({ isOpen, onClose, onSubmit }) {
               </option>
             ))}
           </select>
-          <button type="submit" className="text-white">
+          <button
+            type="submit"
+            className="w-full p-2 bg-blue-600 text-white rounded-md hover:bg-blue-700"
+          >
             Add Book
           </button>
         </form>

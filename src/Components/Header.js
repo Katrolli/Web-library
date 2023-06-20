@@ -7,19 +7,21 @@ function Header({ handleClick, handleBookAdd }) {
         </h1>
 
         <div className="flex flex-col w-24 items-center pl-48 space-y-4 ">
-          <div className="flex flex-row border border-solid space-x-3 h-16 justify-center">
-            <button
-              className=" text-white font-bold py-2 px-4 rounded-full border"
-              onClick={() => handleBookAdd("books")}
-            >
-              Add Book
-            </button>
-            <button
-              onClick={() => handleClick("books")}
-              className=" text-white font-bold py-2 px-4 rounded-full border"
-            >
-              List Books
-            </button>
+          <div id="booksButtons" className="flex flex-row  justify-center">
+            <div className="flex flex-row space-x-8 m-2 justify-center items-center">
+              <button
+                className=" text-white font-bold py-2 px-4 rounded-full border w-48 bg-blue-400"
+                onClick={() => handleBookAdd("books")}
+              >
+                Add Book
+              </button>
+              <button
+                onClick={() => handleClick("books")}
+                className=" text-white font-bold py-2 px-4 rounded-full border w-48  bg-blue-400"
+              >
+                List Books
+              </button>
+            </div>
           </div>
 
           <button
