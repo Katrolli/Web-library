@@ -1,44 +1,41 @@
-import './App.css';
-import StateProvider from './StateProvider/StateProvider';
-import LoginPage from './Login/Login';
-import { BrowserRouter, Route, Routes,Navigate } from 'react-router-dom';
-import { useContext } from 'react';
-import { AuthContext } from './Auth/AuthContext';
-import Home from './Components/Home';
-
+import "./App.css";
+import StateProvider from "./StateProvider/StateProvider";
+import LoginPage from "./Login/Login";
+import { BrowserRouter, Route, Routes, Navigate } from "react-router-dom";
+import { useContext } from "react";
+import { AuthContext } from "./Auth/AuthContext";
+import Home from "./Components/Home";
+import Register from "./Components/Register";
 
 function App() {
-  const {user} = useContext(AuthContext);
+  const { user } = useContext(AuthContext);
 
-  const isAuthenticated = Boolean(user)
+  const isAuthenticated = Boolean(user);
 
   return (
     <div className="App">
-        <BrowserRouter>
-      <StateProvider>
+      <BrowserRouter>
+        <StateProvider>
           <Routes>
-            {isAuthenticated ?  
+            {isAuthenticated ? (
               <>
-                <Route path="/home" element={<Home />} /> 
-                <Route
-                  path="*"
-                  element={<Navigate to="/home" />}
-                />
+                <Route path="/home" element={<Home />} />
+                <Route path="*" element={<Navigate to="/home" />} />
               </>
-              : 
+            ) : (
               <>
                 <Route path="/login" element={<LoginPage />} />
-                <Route
-                  path="*"
-                  element={<Navigate to="/login" />}
-                />
+                <Route path="*" element={<Navigate to="/login" />} />
               </>
-            }
+            )}
           </Routes>
-      </StateProvider>
-        </BrowserRouter>
+        </StateProvider>
+      </BrowserRouter>
     </div>
   );
+
+  // return <Register></Register>;
+  // return <LoginPage />;
 }
 
 export default App;

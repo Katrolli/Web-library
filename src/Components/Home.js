@@ -4,7 +4,8 @@ import AdminPanel from "../admin-panel";
 
 function Home() {
   const { user } = useContext(AuthContext);
-  if (user.role === "admin") {
+
+  if (user.user.role[0] === "Admin") {
     return <AdminPanel />;
   }
   return <div>User is logged</div>;
