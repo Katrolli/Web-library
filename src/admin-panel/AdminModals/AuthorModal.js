@@ -1,14 +1,13 @@
-import Modal from "./Modal";
+import Modal from "../../Components/Modal";
 import { useState, useEffect } from "react";
-
-function CategoryModal({ isOpen, onClose, onSubmit, initialCategory }) {
+function AuthorModal({ isOpen, onClose, onSubmit, initialAuthor }) {
   const [name, setName] = useState("");
-  const [priority, setPriority] = useState(null);
+  const [bio, setBio] = useState("");
 
   useEffect(() => {
     if (isOpen) {
-      setName(initialCategory.name);
-      setPriority(initialCategory.priority);
+      setName(initialAuthor.name);
+      setBio(initialAuthor.bio);
     }
   }, [isOpen]);
 
@@ -17,7 +16,7 @@ function CategoryModal({ isOpen, onClose, onSubmit, initialCategory }) {
       <form
         onSubmit={(e) => {
           e.preventDefault();
-          onSubmit(name, priority);
+          onSubmit(name, bio);
         }}
       >
         <div className="mb-4">
@@ -26,7 +25,7 @@ function CategoryModal({ isOpen, onClose, onSubmit, initialCategory }) {
           </label>
           <input
             type="text"
-            name="name"
+            name="title"
             value={name}
             onChange={(e) => setName(e.target.value)}
             required
@@ -35,13 +34,13 @@ function CategoryModal({ isOpen, onClose, onSubmit, initialCategory }) {
         </div>
         <div className="mb-4">
           <label className="block text-gray-300 text-sm font-bold mb-2">
-            Priority:
+            Author:
           </label>
           <input
-            type="number"
-            name="priority"
-            value={priority}
-            onChange={(e) => setPriority(e.target.value)}
+            type="text"
+            name="author"
+            value={bio}
+            onChange={(e) => setBio(e.target.value)}
             required
             className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-300 leading-tight focus:outline-none focus:shadow-outline bg-gray-800"
           />
@@ -51,7 +50,7 @@ function CategoryModal({ isOpen, onClose, onSubmit, initialCategory }) {
             type="submit"
             className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
           >
-            Update Category
+            Update Author
           </button>
         </div>
       </form>
@@ -59,4 +58,4 @@ function CategoryModal({ isOpen, onClose, onSubmit, initialCategory }) {
   );
 }
 
-export default CategoryModal;
+export default AuthorModal;

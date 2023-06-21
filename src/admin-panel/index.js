@@ -2,17 +2,20 @@ import React, { useState, useContext, useEffect } from "react";
 import axios from "axios";
 import { StateContex } from "../StateProvider/StateProvider";
 import Header from "../Components/Header";
-import BookModal from "../Components/BookModal";
-import AuthorModal from "../Components/AuthorModal";
-import CategoryModal from "../Components/CategoryModal";
-import AddBookModal from "../Components/AddBookModal";
+import BookModal from "./AdminModals/BookModal";
+import AuthorModal from "./AdminModals/AuthorModal";
+import CategoryModal from "./AdminModals/CategoryModal";
+import AddBookModal from "./AdminModals/AddBookModal";
+import AddAuthorModal from "./AdminModals/AddAuthorModal";
 
 const AdminPanel = () => {
   const [currentTab, setCurrentTab] = useState("books");
   const [isAddoBookModal, setIsAddBookModal] = useState(false);
+  const [isAddAuthorModal, setIsAddAuthorModal] = useState(false);
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
   const [selectedItem, setSelectedItem] = useState(null);
   const [selectedType, setSelectedType] = useState(null);
+  const [refresh, setRefresh] = useState(false);
 
   const { books, setData, authors, categories } = useContext(StateContex);
 
@@ -22,29 +25,29 @@ const AdminPanel = () => {
         const token = JSON.parse(localStorage.getItem("token")); // Retrieve the JWT token from storage
         const response = await axios.get("http://localhost:5142/api/Book", {
           headers: {
-            "Content-Type": "application/json",
             Authorization: `Bearer ${token}`, // Include the JWT token in the Authorization header
           },
         });
-        await setData("books", response.data);
+        setData("books", response.data);
       } catch (error) {
         console.error(error); // Handle any errors
       }
     };
-    // const getAuthors = async () => {
-    //   try {
-    //     const token = localStorage.getItem("token"); // Retrieve the JWT token from storage
-    //     const response = await axios.get("http://localhost:5096/Authors", {
-    //       headers: {
-    //         Authorization: `Bearer ${token}`, // Include the JWT token in the Authorization header
-    //       },
-    //     });
-    //     console.log(response.data); // Process the response
-    //     setData("authors", response.data);
-    //   } catch (error) {
-    //     console.error(error); // Handle any errors
-    //   }
-    // };
+    const getAuthors = async () => {
+      try {
+        const token = JSON.parse(localStorage.getItem("token")); // Retrieve the JWT token from storage
+        const response = await axios.get("http://localhost:5142/api/User", {
+          headers: {
+            Authorization: `Bearer ${token}`, // Include the JWT token in the Authorization header
+          },
+        });
+        const authors = response.data.filter((auth) => auth.roleId === 2);
+        console.log(authors); // Process the response
+        setData("authors", authors);
+      } catch (error) {
+        console.error(error); // Handle any errors
+      }
+    };
     // const getCategories = async () => {
     //   try {
     //     const token = localStorage.getItem("token"); // Retrieve the JWT token from storage
@@ -60,32 +63,42 @@ const AdminPanel = () => {
     //   }
     // };
     getBooks();
-    // getAuthors();
+    getAuthors();
     // getCategories();
-  }, []);
+  }, [refresh]);
 
-  const addBook = async (e, title, description, author) => {
-    e.preventDefault();
+  const addBook = async (title, description, author, authorId) => {
     const token = JSON.parse(localStorage.getItem("token"));
+    console.log(author, "hjere");
 
-    const bookData = {
-      Title: title,
-      Description: description,
-      categoryIds: [],
-      authorId: author[0].roleId,
-    };
-    const requestOptions = {
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
-    };
+    // const bookData = {
+    //   Title: title,
+    //   Description: description,
+    //   categoryIds: [],
+    //   authorId: author[0].roleId,
+    // };
+    // const requestOptions = {
+    //   headers: {
+    //     Authorization: `Bearer ${token}`,
+    //   },
+    // };
     try {
       const response = await axios.post(
         "http://localhost:5142/api/Book",
-        bookData,
-        requestOptions
+        {
+          Title: title,
+          Description: description,
+          categoryIds: [],
+          authorId: authorId,
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${token}`, // Include the JWT token in the Authorization header
+          },
+        }
       );
       setData("books", [...books, response.data]);
+      setRefresh((prev) => !prev);
     } catch (error) {
       console.error("Error adding book:", error);
       if (error.response) {
@@ -104,20 +117,52 @@ const AdminPanel = () => {
     }
   };
 
-  const addAuthor = async (name, bio) => {
-    const response = await axios.post("http://localhost:5096/Authors", {
-      name: name,
-      bio: bio,
-    });
-    setData("authors", [...authors, response.data]);
+  const addAuthor = async (name, bio, password, surname, email, username) => {
+    const token = JSON.parse(localStorage.getItem("token"));
+    try {
+      const request = await axios.post(
+        "http://localhost:5142/api/User",
+        {
+          name: name,
+          bio: bio,
+          roleId: 2,
+          Password: password,
+          Email: email,
+          Surname: surname,
+          UserName: username,
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${token}`, // Include the JWT token in the Authorization header
+          },
+        }
+      );
+      setData("authors", [...authors, request.data]);
+      setRefresh((prev) => !prev);
+    } catch (error) {
+      console.error("Error adding author:", error);
+      if (error.response) {
+        console.error(
+          "Response data:",
+          JSON.stringify(error.response.data, null, 2)
+        );
+        console.error("Response status:", error.response.status);
+        console.error(
+          "Response headers:",
+          JSON.stringify(error.response.headers, null, 2)
+        );
+      } else if (error.request) {
+        console.error("Request data:", error.request);
+      }
+    }
   };
 
   const addCategory = async (name, priority) => {
-    const response = await axios.post("http://localhost:5096/Categories", {
+    const request = await axios.post("http://localhost:5142/api/Category", {
       name: name,
       priority: priority,
     });
-    setData("categories", [...categories, response.data]);
+    setData("categories", [...categories, request.data]);
   };
 
   const deleteCategory = async (id) => {
@@ -139,7 +184,12 @@ const AdminPanel = () => {
     setData("books", updatedBooks);
   };
   const deleteAuthor = async (id) => {
-    await axios.delete(`http://localhost:3001/authors/${id}`);
+    const token = JSON.parse(localStorage.getItem("token"));
+    await axios.delete(`http://localhost:5142/api/User/${id}`, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    });
     const updateAuthors = authors.filter((author) => author.id !== id);
 
     setData("authors", updateAuthors);
@@ -213,7 +263,6 @@ const AdminPanel = () => {
   };
 
   const renderedBooks = books.map((book) => {
-    console.log(book);
     return (
       <tbody key={book.id}>
         <td className="border-b-2">{book.title}</td>
@@ -244,6 +293,7 @@ const AdminPanel = () => {
       <tbody>
         <td className="border-b-2">{author.name}</td>
         <td className="border-b-2">{author.bio}</td>
+
         <td className="border-b-2">
           <button
             onClick={() => handleOpenEditModal(author, "author")}
@@ -291,23 +341,25 @@ const AdminPanel = () => {
 
   const handleClick = (nextTab) => {
     setCurrentTab(nextTab);
-    if (nextTab === "books") {
-    }
-    // else if (nextTab === "authors") {
-    //   addAuthor("name", "bio");
-    // } else {
-    //   addCategory("name", 1);
-    // }
   };
 
   const handleBookAdd = () => {
     setIsAddBookModal(true);
+    setRefresh((prev) => !prev);
+  };
+  const handleAuthorAdd = () => {
+    setIsAddAuthorModal(true);
+    setRefresh((prev) => !prev);
   };
 
   return (
     <section className="bg-gray-50 dark:bg-gray-900">
       <div className="flex flex-col items-center justify-center px-6 py-8 mx-auto lg:py-0 min-h-[100vh]">
-        <Header handleClick={handleClick} handleBookAdd={handleBookAdd} />
+        <Header
+          handleClick={handleClick}
+          handleBookAdd={handleBookAdd}
+          handleAuthorAdd={handleAuthorAdd}
+        />
 
         {/* books */}
         {currentTab === "books" ? (
@@ -382,6 +434,11 @@ const AdminPanel = () => {
         isOpen={isAddoBookModal}
         onClose={() => setIsAddBookModal(false)}
         onSubmit={addBook} // You need to adjust the addBook function to accept and handle the form data from the modal
+      />
+      <AddAuthorModal
+        isOpen={isAddAuthorModal}
+        onClose={() => setIsAddAuthorModal(false)}
+        onSubmit={addAuthor}
       />
     </section>
   );

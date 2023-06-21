@@ -1,4 +1,4 @@
-function Header({ handleClick, handleBookAdd }) {
+function Header({ handleClick, handleBookAdd, handleAuthorAdd }) {
   return (
     <div className="w-full bg-white rounded-lg shadow dark:border md:mt-0 sm:max-w-md xl:p-0 dark:bg-gray-800 dark:border-gray-700">
       <div className="p-6 space-y-4 md:space-y-6 sm:p-8 items-center justify-center">
@@ -11,7 +11,7 @@ function Header({ handleClick, handleBookAdd }) {
             <div className="flex flex-row space-x-8 m-2 justify-center items-center">
               <button
                 className=" text-white font-bold py-2 px-4 rounded-full border w-48 bg-blue-400"
-                onClick={() => handleBookAdd("books")}
+                onClick={() => handleBookAdd()}
               >
                 Add Book
               </button>
@@ -23,13 +23,22 @@ function Header({ handleClick, handleBookAdd }) {
               </button>
             </div>
           </div>
-
-          <button
-            onClick={() => handleClick("authors")}
-            className=" text-white font-bold py-2 px-4 rounded-full border"
-          >
-            Authors
-          </button>
+          <div id="authorsButton" className="flex flex-row  justify-center">
+            <div className="flex flex-row space-x-8 m-2 justify-center items-center">
+              <button
+                className=" text-white font-bold py-2 px-4 rounded-full border w-48 bg-blue-400"
+                onClick={() => handleAuthorAdd()}
+              >
+                Add Author
+              </button>
+              <button
+                onClick={() => handleClick("authors")}
+                className="text-white font-bold py-2 px-4 rounded-full border w-48 bg-blue-400"
+              >
+                List Authors
+              </button>
+            </div>
+          </div>
           <button
             onClick={() => handleClick("categories")}
             className=" text-white font-bold py-2 px-4 rounded-full border"

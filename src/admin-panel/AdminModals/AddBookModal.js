@@ -1,13 +1,14 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useContext } from "react";
 import axios from "axios";
-import Modal from "./Modal";
+import { StateContex } from "../../StateProvider/StateProvider";
+import Modal from "../../Components/Modal";
 function AddBookModal({ isOpen, onClose, onSubmit }) {
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
   const [categoryId, setCategoryId] = useState("");
-  const [categories, setCategories] = useState([]);
   const [authorId, setAuthorId] = useState("");
-  const [authors, setAuthors] = useState([]);
+
+  const { setData, authors, categories } = useContext(StateContex);
 
   useEffect(() => {
     const getCategories = async () => {
@@ -18,7 +19,7 @@ function AddBookModal({ isOpen, onClose, onSubmit }) {
             Authorization: `Bearer ${token}`,
           },
         });
-        setCategories(response.data);
+        setData("categories", response.data);
       } catch (error) {
         console.error("Error fetching categories", error);
       }
@@ -32,9 +33,9 @@ function AddBookModal({ isOpen, onClose, onSubmit }) {
           },
         });
         const authors = response.data.filter((auth) => auth.roleId === 2);
-        setAuthors(authors);
+        setData("authors", authors);
       } catch (error) {
-        console.error("Error fetching categories", error);
+        console.error("Error fetching authors", error);
       }
     };
     getAuthors();
@@ -53,7 +54,7 @@ function AddBookModal({ isOpen, onClose, onSubmit }) {
           className="space-y-4"
           onSubmit={(e) => {
             e.preventDefault();
-            onSubmit(e, title, description, authors);
+            onSubmit(title, description, authors, authorId);
           }}
         >
           <input
@@ -88,7 +89,7 @@ function AddBookModal({ isOpen, onClose, onSubmit }) {
           <select
             className="w-full p-2 border-2 border-gray-300 rounded-md"
             value={authorId}
-            onChange={(e) => setAuthorId([parseInt(e.target.value)])}
+            onChange={(e) => setAuthorId(parseInt(e.target.value))}
             required
           >
             <option value="">Select Author</option>
