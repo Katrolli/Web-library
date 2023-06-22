@@ -24,12 +24,17 @@ const AuthProvider = ({ children }) => {
   //     window.removeEventListener("beforeunload", onRefresh);
   //   };
   // }, []);
+  const logout = () => {
+    setUser(null);
+    localStorage.removeItem("user");
+    localStorage.removeItem("token");
+  };
 
   const setAuthData = (key, value) => {
     setUser((prevState) => ({ ...prevState, [key]: value }));
   };
 
-  const values = { user, setUser, setAuthData };
+  const values = { user, setUser, setAuthData, logout };
 
   return <AuthContext.Provider value={values}>{children}</AuthContext.Provider>;
 };

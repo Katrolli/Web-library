@@ -5,7 +5,7 @@ import { BrowserRouter, Route, Routes, Navigate } from "react-router-dom";
 import { useContext } from "react";
 import { AuthContext } from "./Auth/AuthContext";
 import Home from "./Components/Home";
-import Register from "./Components/Register";
+import Logout from "./Login/Logout";
 
 function App() {
   const { user } = useContext(AuthContext);
@@ -20,6 +20,7 @@ function App() {
             {isAuthenticated ? (
               <>
                 <Route path="/home" element={<Home />} />
+                <Route path="/logout" element={<Logout />} />
                 <Route path="*" element={<Navigate to="/home" />} />
               </>
             ) : (
@@ -33,9 +34,6 @@ function App() {
       </BrowserRouter>
     </div>
   );
-
-  // return <Register></Register>;
-  // return <LoginPage />;
 }
 
 export default App;

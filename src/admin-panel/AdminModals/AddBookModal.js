@@ -6,9 +6,15 @@ function AddBookModal({ isOpen, onClose, onSubmit }) {
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
   const [categoryId, setCategoryId] = useState("");
+
   const [authorId, setAuthorId] = useState("");
 
   const { setData, authors, categories } = useContext(StateContex);
+  const [file, setFile] = useState();
+  function handleChange(e) {
+    console.log(e.target.files);
+    setFile(e.target.files[0]);
+  }
 
   useEffect(() => {
     const getCategories = async () => {
@@ -19,7 +25,9 @@ function AddBookModal({ isOpen, onClose, onSubmit }) {
             Authorization: `Bearer ${token}`,
           },
         });
+
         setData("categories", response.data);
+        console.log(categories);
       } catch (error) {
         console.error("Error fetching categories", error);
       }
@@ -54,7 +62,7 @@ function AddBookModal({ isOpen, onClose, onSubmit }) {
           className="space-y-4"
           onSubmit={(e) => {
             e.preventDefault();
-            onSubmit(title, description, authors, authorId);
+            onSubmit(title, description, authorId, categoryId, file);
           }}
         >
           <input
@@ -73,6 +81,8 @@ function AddBookModal({ isOpen, onClose, onSubmit }) {
             required
             placeholder="Description"
           />
+          <input type="file" onChange={handleChange} />
+          <img src={file} />
           <select
             className="w-full p-2 border-2 border-gray-300 rounded-md"
             value={categoryId}
@@ -82,7 +92,7 @@ function AddBookModal({ isOpen, onClose, onSubmit }) {
             <option value="">Select category</option>
             {categories.map((category) => (
               <option key={category.id} value={category.id}>
-                {category.orientation}
+                {category.name}
               </option>
             ))}
           </select>
@@ -95,7 +105,7 @@ function AddBookModal({ isOpen, onClose, onSubmit }) {
             <option value="">Select Author</option>
             {authors.map((author) => (
               <option key={author.id} value={author.id}>
-                {author.id}
+                {author.name}
               </option>
             ))}
           </select>

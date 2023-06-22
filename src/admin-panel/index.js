@@ -7,11 +7,14 @@ import AuthorModal from "./AdminModals/AuthorModal";
 import CategoryModal from "./AdminModals/CategoryModal";
 import AddBookModal from "./AdminModals/AddBookModal";
 import AddAuthorModal from "./AdminModals/AddAuthorModal";
+import AddCategoryModal from "./AdminModals/AddCategoryModal";
+import BookCard from "../Components/BookCard";
 
 const AdminPanel = () => {
   const [currentTab, setCurrentTab] = useState("books");
   const [isAddoBookModal, setIsAddBookModal] = useState(false);
   const [isAddAuthorModal, setIsAddAuthorModal] = useState(false);
+  const [isAddCategoryModal, setIsCategoryModal] = useState(false);
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
   const [selectedItem, setSelectedItem] = useState(null);
   const [selectedType, setSelectedType] = useState(null);
@@ -41,59 +44,46 @@ const AdminPanel = () => {
             Authorization: `Bearer ${token}`, // Include the JWT token in the Authorization header
           },
         });
-        const authors = response.data.filter((auth) => auth.roleId === 2);
-        console.log(authors); // Process the response
+        const authors = response.data.filter((auth) => auth.role === "Author");
         setData("authors", authors);
       } catch (error) {
         console.error(error); // Handle any errors
       }
     };
-    // const getCategories = async () => {
-    //   try {
-    //     const token = localStorage.getItem("token"); // Retrieve the JWT token from storage
-    //     const response = await axios.get("http://localhost:5096/Categories", {
-    //       headers: {
-    //         Authorization: `Bearer ${token}`, // Include the JWT token in the Authorization header
-    //       },
-    //     });
-    //     console.log(response.data); // Process the response
-    //     setData("categories", response.data);
-    //   } catch (error) {
-    //     console.error(error); // Handle any errors
-    //   }
-    // };
+    const getCategories = async () => {
+      try {
+        const token = JSON.parse(localStorage.getItem("token")); // Retrieve the JWT token from storage
+        const response = await axios.get("http://localhost:5142/api/Category", {
+          headers: {
+            Authorization: `Bearer ${token}`, // Include the JWT token in the Authorization header
+          },
+        });
+        setData("categories", response.data);
+      } catch (error) {
+        console.error(error); // Handle any errors
+      }
+    };
     getBooks();
     getAuthors();
-    // getCategories();
+    getCategories();
   }, [refresh]);
 
-  const addBook = async (title, description, author, authorId) => {
+  const addBook = async (title, description, authorId, categoryId, file) => {
     const token = JSON.parse(localStorage.getItem("token"));
-    console.log(author, "hjere");
-
-    // const bookData = {
-    //   Title: title,
-    //   Description: description,
-    //   categoryIds: [],
-    //   authorId: author[0].roleId,
-    // };
-    // const requestOptions = {
-    //   headers: {
-    //     Authorization: `Bearer ${token}`,
-    //   },
-    // };
+    const formData = new FormData();
+    formData.append("Title", title);
+    formData.append("Description", description);
+    formData.append("authorId", authorId);
+    formData.append("categoryIds", categoryId);
+    formData.append("Cover", file);
     try {
       const response = await axios.post(
         "http://localhost:5142/api/Book",
-        {
-          Title: title,
-          Description: description,
-          categoryIds: [],
-          authorId: authorId,
-        },
+        formData,
         {
           headers: {
-            Authorization: `Bearer ${token}`, // Include the JWT token in the Authorization header
+            Authorization: `Bearer ${token}`,
+            "Content-Type": "multipart/form-data",
           },
         }
       );
@@ -157,16 +147,48 @@ const AdminPanel = () => {
     }
   };
 
-  const addCategory = async (name, priority) => {
-    const request = await axios.post("http://localhost:5142/api/Category", {
-      name: name,
-      priority: priority,
-    });
-    setData("categories", [...categories, request.data]);
+  const addCategory = async (orientation) => {
+    const token = JSON.parse(localStorage.getItem("token"));
+    try {
+      const request = await axios.post(
+        "http://localhost:5142/api/Category",
+        {
+          Name: orientation,
+          Priority: orientation,
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${token}`, // Include the JWT token in the Authorization header
+          },
+        }
+      );
+      setData("categories", [...categories, request.data]);
+      setRefresh((prev) => !prev);
+    } catch (error) {
+      console.error("Error adding category:", error);
+      if (error.response) {
+        console.error(
+          "Response data:",
+          JSON.stringify(error.response.data, null, 2)
+        );
+        console.error("Response status:", error.response.status);
+        console.error(
+          "Response headers:",
+          JSON.stringify(error.response.headers, null, 2)
+        );
+      } else if (error.request) {
+        console.error("Request data:", error.request);
+      }
+    }
   };
 
   const deleteCategory = async (id) => {
-    await axios.delete(`http://localhost:3001/categories/${id}`);
+    const token = JSON.parse(localStorage.getItem("token"));
+    await axios.delete(`http://localhost:5142/api/Category/${id}`, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    });
     const updatedCategories = categories.filter((cat) => cat.id !== id);
 
     setData("categories", updatedCategories);
@@ -262,29 +284,47 @@ const AdminPanel = () => {
     handleCloseEditModal();
   };
 
+  // const renderedBooks = books.map((book) => {
+  //   const imageUrl = "http://localhost:5142/" + book.imageUrl;
+  //   console.log(book);
+  //   return (
+  //     <tbody key={book.id}>
+  //       <img src={imageUrl}></img>
+  //       <td className="border-b-2">{book.title}</td>
+  //       <td className="border-b-2">{book.author}</td>
+  //       <td className="border-b-2">{book.categories[0]}</td>
+  //       <td className="border-b-2">
+  //         <button
+  //           onClick={() => handleOpenEditModal(book, "book")}
+  //           className=" text-white font-bold py-2 px-4 rounded-full border"
+  //         >
+  //           Edit
+  //         </button>
+  //       </td>
+  //       <td className="border-b-2">
+  //         <button
+  //           onClick={() => deleteBook(book.id)}
+  //           className=" text-white font-bold py-2 px-4 rounded-full border"
+  //         >
+  //           Delete
+  //         </button>
+  //       </td>
+  //     </tbody>
+  //   );
+  // });
+
   const renderedBooks = books.map((book) => {
+    const imageUrl = "http://localhost:5142/" + book.imageUrl;
     return (
-      <tbody key={book.id}>
-        <td className="border-b-2">{book.title}</td>
-        <td className="border-b-2">{book.author}</td>
-        <td className="border-b-2">{book.category}</td>
-        <td className="border-b-2">
-          <button
-            onClick={() => handleOpenEditModal(book, "book")}
-            className=" text-white font-bold py-2 px-4 rounded-full border"
-          >
-            Edit
-          </button>
-        </td>
-        <td className="border-b-2">
-          <button
-            onClick={() => deleteBook(book.id)}
-            className=" text-white font-bold py-2 px-4 rounded-full border"
-          >
-            Delete
-          </button>
-        </td>
-      </tbody>
+      <BookCard
+        key={book.id}
+        title={book.title}
+        author={book.author}
+        description={book.description}
+        onEdit={() => handleOpenEditModal(book, "book")}
+        onDelete={() => deleteBook(book.id)}
+        cover={imageUrl}
+      />
     );
   });
 
@@ -318,7 +358,6 @@ const AdminPanel = () => {
     return (
       <tbody>
         <td className="border-b-2">{cat.name}</td>
-        <td className="border-b-2">{cat.priority}</td>
         <td className="border-b-2">
           <button
             onClick={() => handleOpenEditModal(cat, "categories")}
@@ -341,6 +380,7 @@ const AdminPanel = () => {
 
   const handleClick = (nextTab) => {
     setCurrentTab(nextTab);
+    setRefresh((prev) => !prev);
   };
 
   const handleBookAdd = () => {
@@ -352,6 +392,11 @@ const AdminPanel = () => {
     setRefresh((prev) => !prev);
   };
 
+  const handleCategoryAdd = () => {
+    setIsCategoryModal(true);
+    setRefresh((prev) => !prev);
+  };
+
   return (
     <section className="bg-gray-50 dark:bg-gray-900">
       <div className="flex flex-col items-center justify-center px-6 py-8 mx-auto lg:py-0 min-h-[100vh]">
@@ -359,10 +404,11 @@ const AdminPanel = () => {
           handleClick={handleClick}
           handleBookAdd={handleBookAdd}
           handleAuthorAdd={handleAuthorAdd}
+          handleCategoryAdd={handleCategoryAdd}
         />
 
         {/* books */}
-        {currentTab === "books" ? (
+        {/* {currentTab === "books" ? (
           <div
             className="flex flex-col w-full border border-solid m-12"
             id="table"
@@ -377,6 +423,11 @@ const AdminPanel = () => {
               </thead>
               {renderedBooks}
             </table>
+          </div>
+        ) : null} */}
+        {currentTab === "books" ? (
+          <div className="flex flex-row justify-center m-12 space-x-3 space-y-3">
+            {renderedBooks}
           </div>
         ) : null}
         {currentTab === "authors" ? (
@@ -403,7 +454,6 @@ const AdminPanel = () => {
             <table className="table-auto border-spacing-2 text-white space-y-6">
               <thead>
                 <td className="border-b-2">Name</td>
-                <td className="border-b-2">Priority</td>
                 <td className="border-b-2">Edit</td>
                 <td className="border-b-2">Delete</td>
               </thead>
@@ -433,12 +483,17 @@ const AdminPanel = () => {
       <AddBookModal
         isOpen={isAddoBookModal}
         onClose={() => setIsAddBookModal(false)}
-        onSubmit={addBook} // You need to adjust the addBook function to accept and handle the form data from the modal
+        onSubmit={addBook}
       />
       <AddAuthorModal
         isOpen={isAddAuthorModal}
         onClose={() => setIsAddAuthorModal(false)}
         onSubmit={addAuthor}
+      />
+      <AddCategoryModal
+        isOpen={isAddCategoryModal}
+        onClose={() => setIsCategoryModal(false)}
+        onSubmit={addCategory}
       />
     </section>
   );
