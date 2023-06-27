@@ -4,13 +4,12 @@ import axios from "axios";
 
 import { PencilIcon } from "@heroicons/react/20/solid";
 import { TrashIcon } from "@heroicons/react/20/solid";
-import { ChevronDownIcon } from "@heroicons/react/20/solid";
 import Header from "../Components/Header";
 import AddAuthorModal from "../admin-panel/AdminModals/AddAuthorModal";
 import AuthorModal from "../admin-panel/AdminModals/AuthorModal";
 
 const AuthorsPage = () => {
-  const { authors, setAuthors, getAuthors } = useContext(StateContex);
+  const { authors, getAuthors } = useContext(StateContex);
 
   const [selectedType, setSelectedType] = useState(null);
   const [selectedItem, setSelectedItem] = useState(null);
@@ -36,7 +35,7 @@ const AuthorsPage = () => {
   const addAuthor = async (name, bio, password, surname, email, username) => {
     const token = JSON.parse(localStorage.getItem("token"));
     try {
-      const request = await axios.post(
+      await axios.post(
         "http://localhost:5142/api/User",
         {
           name: name,
@@ -82,22 +81,45 @@ const AuthorsPage = () => {
     });
     getAuthors();
   };
-  const handleAuthorEdit = async (name, bio) => {
-    const updatedItem = {
-      ...selectedItem,
-      name,
-      bio,
-    };
-    await axios.put(
-      `http://localhost:5142/api/User/${updatedItem.id}`,
-      updatedItem
-    );
-    const updatedAuthors = authors.map((author) =>
-      author.id === updatedItem.id ? updatedItem : author
-    );
-    setAuthors(updatedAuthors);
 
-    handleCloseEditModal();
+  const handleAuthorEdit = async (name, surname, email, username, bio) => {
+    const token = JSON.parse(localStorage.getItem("token"));
+    const updatedItem = {
+      Name: name,
+      Surname: surname,
+      Email: email,
+      UserName: username,
+      Bio: bio,
+    };
+
+    try {
+      await axios.put(
+        `http://localhost:5142/api/User/${selectedItem.id}`,
+        updatedItem,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`, // Include the JWT token in the Authorization header
+          },
+        }
+      );
+      getAuthors();
+      handleCloseEditModal();
+    } catch (error) {
+      console.error("Error updating author:", error);
+      if (error.response) {
+        console.error(
+          "Response data:",
+          JSON.stringify(error.response.data, null, 2)
+        );
+        console.error("Response status:", error.response.status);
+        console.error(
+          "Response headers:",
+          JSON.stringify(error.response.headers, null, 2)
+        );
+      } else if (error.request) {
+        console.error("Request data:", error.request);
+      }
+    }
   };
 
   const renderedAuthors = authors.map((author) => {

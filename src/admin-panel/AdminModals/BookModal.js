@@ -9,12 +9,15 @@ function BookModal({ isOpen, onClose, onSubmit, initialBook }) {
   const [categoryId, setCategoryId] = useState([]);
   const [file, setFile] = useState();
 
-  const { authors, categories, getCategories } = useContext(StateContex);
+  const { authors, categories, getCategories, getAuthors } =
+    useContext(StateContex);
 
   useEffect(() => {
     getCategories();
+    getAuthors();
   }, []);
-  function handleChange(e) {
+
+  function handleFileChange(e) {
     setFile(e.target.files[0]);
   }
 
@@ -28,7 +31,6 @@ function BookModal({ isOpen, onClose, onSubmit, initialBook }) {
           label: categoryName,
         }))
       );
-      // We assume that the image of the book is stored in initialBook.image
       setFile(initialBook.imageUrl);
     }
   }, [isOpen]);
@@ -76,24 +78,27 @@ function BookModal({ isOpen, onClose, onSubmit, initialBook }) {
           <label className="block text-gray-300 text-sm font-bold mb-2">
             Category:
           </label>
-          <Select
-            isMulti
-            value={categoryId}
-            onChange={setCategoryId}
-            options={categories.map((category) => ({
-              value: category.id,
-              label: category.name,
-            }))}
-          />
+          <div className="w-full p-2 border-2 border-gray-300 rounded-md">
+            <Select
+              required
+              isMulti
+              value={categoryId}
+              onChange={setCategoryId}
+              options={categories.map((category) => ({
+                value: category.id,
+                label: category.name,
+              }))}
+            />
+          </div>
         </div>
         <div className="mb-4">
           <label className="block text-gray-300 text-sm font-bold mb-2">
             Book Image:
           </label>
-          <input type="file" onChange={handleChange} />
-          {file && (
+          <input type="file" onChange={handleFileChange} />
+          {file ? (
             <img src={"http://localhost:5142/" + file} alt="book preview" />
-          )}
+          ) : null}
         </div>
 
         <div className="flex items-center justify-between">

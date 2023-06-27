@@ -4,7 +4,6 @@ import axios from "axios";
 
 import { PencilIcon } from "@heroicons/react/20/solid";
 import { TrashIcon } from "@heroicons/react/20/solid";
-import { ChevronDownIcon } from "@heroicons/react/20/solid";
 import Header from "../Components/Header";
 import AddCategoryModal from "../admin-panel/AdminModals/AddCategoryModal";
 import CategoryModal from "../admin-panel/AdminModals/CategoryModal";
@@ -100,6 +99,8 @@ const CategoriesPage = () => {
 
   const renderedCategories = categories.map((cat) => {
     console.log(cat);
+    let dateStr = cat.createdAt;
+    let date = new Date(dateStr);
     return (
       <tr key={cat.id}>
         <td className="whitespace-nowrap py-4 pl-4 pr-3 text-sm font-medium text-gray-900 sm:pl-0 text-left">
@@ -107,6 +108,12 @@ const CategoriesPage = () => {
         </td>
         <td className="whitespace-nowrap px-3 py-4 text-sm text-gray-500 text-left">
           {cat.priority}
+        </td>
+        <td className="whitespace-nowrap px-3 py-4 text-sm text-gray-500 text-left">
+          {date.toLocaleDateString()}
+        </td>
+        <td className="whitespace-nowrap px-3 py-4 text-sm text-gray-500 text-left">
+          {cat.createdBy}
         </td>
 
         <td className="whitespace-nowrap px-3 py-4 text-sm text-gray-500 text-left">
@@ -164,6 +171,26 @@ const CategoriesPage = () => {
                       className="px-3 py-3.5 text-left text-sm font-semibold text-gray-900"
                     >
                       <span className="group inline-flex">Priority</span>
+                    </th>
+
+                    <th
+                      scope="col"
+                      className="px-3 py-3.5 text-left text-sm font-semibold text-gray-900"
+                    >
+                      <span className="group inline-flex">
+                        Created At
+                        <span className="ml-2 flex-none rounded bg-gray-100 text-gray-900 group-hover:bg-gray-200"></span>
+                      </span>
+                    </th>
+
+                    <th
+                      scope="col"
+                      className="px-3 py-3.5 text-left text-sm font-semibold text-gray-900"
+                    >
+                      <span className="group inline-flex">
+                        Created By
+                        <span className="ml-2 flex-none rounded bg-gray-100 text-gray-900 group-hover:bg-gray-200"></span>
+                      </span>
                     </th>
 
                     <th

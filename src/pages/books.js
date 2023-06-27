@@ -59,7 +59,20 @@ const BooksPage = () => {
       getBooks();
       handleCloseEditModal();
     } catch (error) {
-      console.error(error);
+      console.error("Error adding book:", error);
+      if (error.response) {
+        console.error(
+          "Response data:",
+          JSON.stringify(error.response.data, null, 2)
+        );
+        console.error("Response status:", error.response.status);
+        console.error(
+          "Response headers:",
+          JSON.stringify(error.response.headers, null, 2)
+        );
+      } else if (error.request) {
+        console.error("Request data:", error.request);
+      }
     }
   };
 
@@ -116,7 +129,10 @@ const BooksPage = () => {
   };
 
   const renderedBooks = books.map((book) => {
-    const imageUrl = "http://localhost:5142/" + book.imageUrl;
+    // const imageUrl = "http://localhost:5142/" + book.imageUrl;
+    console.log(book);
+    let dateStr = book.createdAt;
+    let date = new Date(dateStr);
     return (
       <tr key={book.id}>
         <td className="whitespace-nowrap py-4 pl-4 pr-3 text-sm font-medium text-gray-900 sm:pl-0 text-left">
@@ -130,6 +146,12 @@ const BooksPage = () => {
         </td>
         <td className="whitespace-nowrap px-3 py-4 text-sm text-gray-500 text-left">
           {book.description}
+        </td>
+        <td className="whitespace-nowrap px-3 py-4 text-sm text-gray-500 text-left">
+          {book.createdBy}
+        </td>
+        <td className="whitespace-nowrap px-3 py-4 text-sm text-gray-500 text-left">
+          {date.toLocaleDateString()}
         </td>
         <td className="whitespace-nowrap px-3 py-4 text-sm text-gray-500 text-left">
           <div className="flex space-x-2">
@@ -198,6 +220,18 @@ const BooksPage = () => {
                       className="px-3 py-3.5 text-left text-sm font-semibold text-gray-900"
                     >
                       <span className="group inline-flex">Description</span>
+                    </th>
+                    <th
+                      scope="col"
+                      className="px-3 py-3.5 text-left text-sm font-semibold text-gray-900"
+                    >
+                      <span className="group inline-flex">Created By</span>
+                    </th>
+                    <th
+                      scope="col"
+                      className="px-3 py-3.5 text-left text-sm font-semibold text-gray-900"
+                    >
+                      <span className="group inline-flex">Created At</span>
                     </th>
                     <th
                       scope="col"

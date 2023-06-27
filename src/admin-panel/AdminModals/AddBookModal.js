@@ -12,7 +12,7 @@ function AddBookModal({ onClose, onSubmit }) {
   const [file, setFile] = useState();
 
   // const { setData, authors, categories } = useContext(StateContex);
-  const { books, authors, categories, getAuthors, getCategories, getBooks } =
+  const { authors, categories, getAuthors, getCategories, getBooks } =
     useContext(StateContex);
   const { user, isAdmin, isAuthor } = useContext(AuthContext);
 
@@ -25,40 +25,6 @@ function AddBookModal({ onClose, onSubmit }) {
     getBooks();
     getCategories();
   }, []);
-
-  // useEffect(() => {
-  //   const getCategories = async () => {
-  //     const token = JSON.parse(localStorage.getItem("token"));
-  //     try {
-  //       const response = await axios.get("http://localhost:5142/api/Category", {
-  //         headers: {
-  //           Authorization: `Bearer ${token}`,
-  //         },
-  //       });
-
-  //       setData("categories", response.data);
-  //       console.log(categories);
-  //     } catch (error) {
-  //       console.error("Error fetching categories", error);
-  //     }
-  //   };
-  //   const getAuthors = async () => {
-  //     const token = JSON.parse(localStorage.getItem("token"));
-  //     try {
-  //       const response = await axios.get("http://localhost:5142/api/User", {
-  //         headers: {
-  //           Authorization: `Bearer ${token}`,
-  //         },
-  //       });
-  //       const authors = response.data.filter((auth) => auth.roleId === 2);
-  //       setData("authors", authors);
-  //     } catch (error) {
-  //       console.error("Error fetching authors", error);
-  //     }
-  //   };
-  //   getAuthors();
-  //   getCategories();
-  // }, []);
 
   const onFormSubmit = (e) => {
     e.preventDefault();
@@ -101,6 +67,7 @@ function AddBookModal({ onClose, onSubmit }) {
 
           <div className="w-full p-2 border-2 border-gray-300 rounded-md">
             <Select
+              required
               isMulti
               value={categoryId}
               onChange={setCategoryId}
