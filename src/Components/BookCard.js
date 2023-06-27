@@ -16,6 +16,10 @@ function BookCard({ title, author, description, onEdit, onDelete, cover }) {
         flexDirection: "column",
         justifyContent: "center",
         alignItems: "center",
+        border: "3px solid brown", // increase border thickness
+        boxSizing: "border-box", // to include border in width/height calculation
+        padding: 2, // increase space inside the
+        margin: 2,
       }}
     >
       <CardActionArea>

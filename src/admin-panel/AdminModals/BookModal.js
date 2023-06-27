@@ -1,16 +1,35 @@
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
+import { StateContex } from "../../StateProvider/StateProvider";
 import Modal from "../../Components/Modal";
+import Select from "react-select";
 
 function BookModal({ isOpen, onClose, onSubmit, initialBook }) {
   const [title, setTitle] = useState("");
-  const [author, setAuthor] = useState("");
-  const [category, setCategory] = useState("");
+  const [authorId, setAuthorId] = useState("");
+  const [categoryId, setCategoryId] = useState([]);
+  const [file, setFile] = useState();
+
+  const { authors, categories, getCategories } = useContext(StateContex);
+
+  useEffect(() => {
+    getCategories();
+  }, []);
+  function handleChange(e) {
+    setFile(e.target.files[0]);
+  }
 
   useEffect(() => {
     if (isOpen) {
       setTitle(initialBook.title);
-      setAuthor(initialBook.author);
-      setCategory(initialBook.category);
+      setAuthorId(initialBook.authorId);
+      setCategoryId(
+        initialBook.categories.map((categoryName) => ({
+          value: categories.find((c) => c.name === categoryName).id,
+          label: categoryName,
+        }))
+      );
+      // We assume that the image of the book is stored in initialBook.image
+      setFile(initialBook.imageUrl);
     }
   }, [isOpen]);
 
@@ -19,12 +38,12 @@ function BookModal({ isOpen, onClose, onSubmit, initialBook }) {
       <form
         onSubmit={(e) => {
           e.preventDefault();
-          onSubmit(title, author, category);
+          onSubmit(title, authorId, categoryId, file);
         }}
       >
         <div className="mb-4">
           <label className="block text-gray-300 text-sm font-bold mb-2">
-            Name:
+            Title:
           </label>
           <input
             type="text"
@@ -39,27 +58,42 @@ function BookModal({ isOpen, onClose, onSubmit, initialBook }) {
           <label className="block text-gray-300 text-sm font-bold mb-2">
             Author:
           </label>
-          <input
-            type="text"
-            name="author"
-            value={author}
-            onChange={(e) => setAuthor(e.target.value)}
+          <select
+            value={authorId}
+            onChange={(e) => setAuthorId(parseInt(e.target.value))}
             required
             className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-300 leading-tight focus:outline-none focus:shadow-outline bg-gray-800"
-          />
+          >
+            <option value="">Select Author</option>
+            {authors.map((author) => (
+              <option key={author.id} value={author.id}>
+                {author.name}
+              </option>
+            ))}
+          </select>
         </div>
         <div className="mb-6">
           <label className="block text-gray-300 text-sm font-bold mb-2">
             Category:
           </label>
-          <input
-            type="text"
-            name="category"
-            value={category}
-            onChange={(e) => setCategory(e.target.value)}
-            required
-            className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-300 leading-tight focus:outline-none focus:shadow-outline bg-gray-800"
+          <Select
+            isMulti
+            value={categoryId}
+            onChange={setCategoryId}
+            options={categories.map((category) => ({
+              value: category.id,
+              label: category.name,
+            }))}
           />
+        </div>
+        <div className="mb-4">
+          <label className="block text-gray-300 text-sm font-bold mb-2">
+            Book Image:
+          </label>
+          <input type="file" onChange={handleChange} />
+          {file && (
+            <img src={"http://localhost:5142/" + file} alt="book preview" />
+          )}
         </div>
 
         <div className="flex items-center justify-between">

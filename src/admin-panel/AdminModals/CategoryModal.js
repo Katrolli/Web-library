@@ -42,6 +42,8 @@ function CategoryModal({ isOpen, onClose, onSubmit, initialCategory }) {
             name="priority"
             value={priority}
             onChange={(e) => setPriority(e.target.value)}
+            min="1"
+            max="5"
             required
             className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-300 leading-tight focus:outline-none focus:shadow-outline bg-gray-800"
           />

@@ -1,69 +1,118 @@
-function Header({
-  handleClick,
-  handleBookAdd,
-  handleAuthorAdd,
-  handleCategoryAdd,
-}) {
-  return (
-    <div className="w-full bg-white rounded-lg shadow dark:border md:mt-0 sm:max-w-md xl:p-0 dark:bg-gray-800 dark:border-gray-700">
-      <div className="p-6 space-y-4 md:space-y-6 sm:p-8 items-center justify-center">
-        <h1 className="text-xl font-bold leading-tight tracking-tight text-gray-900 md:text-2xl dark:text-white">
-          Choose an option
-        </h1>
+import { useState, useContext } from "react";
+import { useNavigate } from "react-router-dom";
+import { Dialog } from "@headlessui/react";
+import { Bars3Icon, XMarkIcon } from "@heroicons/react/24/outline";
+import { AuthContext } from "../Auth/AuthContext";
 
-        <div className="flex flex-col w-24 items-center pl-48 space-y-4 ">
-          <div id="booksButtons" className="flex flex-row  justify-center">
-            <div className="flex flex-row space-x-8 m-2 justify-center items-center">
-              <button
-                className=" text-white font-bold py-2 px-4 rounded-full border w-48 bg-blue-400"
-                onClick={() => handleBookAdd()}
-              >
-                Add Book
-              </button>
-              <button
-                onClick={() => handleClick("books")}
-                className=" text-white font-bold py-2 px-4 rounded-full border w-48  bg-blue-400"
-              >
-                List Books
-              </button>
-            </div>
-          </div>
-          <div id="authorsButton" className="flex flex-row  justify-center">
-            <div className="flex flex-row space-x-8 m-2 justify-center items-center">
-              <button
-                className=" text-white font-bold py-2 px-4 rounded-full border w-48 bg-blue-400"
-                onClick={() => handleAuthorAdd()}
-              >
-                Add Author
-              </button>
-              <button
-                onClick={() => handleClick("authors")}
-                className="text-white font-bold py-2 px-4 rounded-full border w-48 bg-blue-400"
-              >
-                List Authors
-              </button>
-            </div>
-          </div>
-          <div id="categoriesButton" className="flex flex-row  justify-center">
-            <div className="flex flex-row space-x-8 m-2 justify-center items-center">
-              <button
-                className=" text-white font-bold py-2 px-4 rounded-full border w-48 bg-blue-400"
-                onClick={() => handleCategoryAdd()}
-              >
-                Add Category
-              </button>
-              <button
-                onClick={() => handleClick("categories")}
-                className="text-white font-bold py-2 px-4 rounded-full border w-48 bg-blue-400"
-              >
-                List Categories
-              </button>
-            </div>
-          </div>
+const getNavigationRoutes = (isAdmin) => {
+  if (isAdmin) {
+    return [
+      { name: "Books", href: "/books" },
+      { name: "Authors", href: "/authors" },
+      { name: "Categories", href: "/categories" },
+      { name: "Report", href: "/report" },
+    ];
+  } else {
+    // For Authors & User we only need this route
+    return [{ name: "Books", href: "/books" }];
+  }
+};
+
+const Header = () => {
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const { isAdmin, logout } = useContext(AuthContext);
+  const navigate = useNavigate();
+
+  const navigation = getNavigationRoutes(isAdmin);
+
+  return (
+    <header className="bg-indigo-600">
+      <nav
+        className="mx-auto flex max-w-7xl items-center justify-between p-6 lg:px-8"
+        aria-label="Global"
+      >
+        <div className="flex lg:flex-1"></div>
+        <div className="flex lg:hidden">
+          <button
+            type="button"
+            className="-m-2.5 inline-flex items-center justify-center rounded-md p-2.5 text-indigo-300"
+            onClick={() => setMobileMenuOpen(true)}
+          >
+            <span className="sr-only">Open main menu</span>
+            <Bars3Icon className="h-6 w-6" aria-hidden="true" />
+          </button>
         </div>
-      </div>
-    </div>
+        <div className="hidden lg:flex lg:gap-x-12">
+          {navigation.map((item) => (
+            <button
+              key={item.name}
+              onClick={() => navigate(item.href)}
+              className="text-sm font-semibold leading-6 text-white"
+            >
+              {item.name}
+            </button>
+          ))}
+        </div>
+        <div className="hidden lg:flex lg:flex-1 lg:justify-end">
+          <button
+            onClick={() => {
+              logout();
+              navigate("/logout");
+            }}
+            className="-mx-3 block rounded-lg px-3 py-2.5 text-base font-semibold leading-7 text-gray-50"
+          >
+            Log out
+          </button>
+        </div>
+      </nav>
+      <Dialog
+        as="div"
+        className="lg:hidden"
+        open={mobileMenuOpen}
+        onClose={setMobileMenuOpen}
+      >
+        <div className="fixed inset-0 z-10" />
+        <Dialog.Panel className="fixed inset-y-0 right-0 z-10 w-full overflow-y-auto bg-white px-6 py-6 sm:max-w-sm sm:ring-1 sm:ring-gray-900/10">
+          <div className="flex items-center justify-between">
+            <button
+              type="button"
+              className="-m-2.5 rounded-md p-2.5 text-gray-700"
+              onClick={() => setMobileMenuOpen(false)}
+            >
+              <span className="sr-only">Close menu</span>
+              <XMarkIcon className="h-6 w-6" aria-hidden="true" />
+            </button>
+          </div>
+          <div className="mt-6 flow-root">
+            <div className="-my-6 divide-y divide-gray-500/10">
+              <div className="space-y-2 py-6">
+                {navigation.map((item) => (
+                  <button
+                    key={item.name}
+                    onClick={() => navigate(item.href)}
+                    className="-mx-3 block rounded-lg px-3 py-2 text-base font-semibold leading-7 text-gray-900 hover:bg-gray-50"
+                  >
+                    {item.name}
+                  </button>
+                ))}
+              </div>
+              <div className="py-6">
+                <button
+                  onClick={() => {
+                    logout();
+                    navigate("/logout");
+                  }}
+                  className="-mx-3 block rounded-lg px-3 py-2.5 text-base font-semibold leading-7 text-gray-900 hover:bg-gray-50"
+                >
+                  Log out
+                </button>
+              </div>
+            </div>
+          </div>
+        </Dialog.Panel>
+      </Dialog>
+    </header>
   );
-}
+};
 
 export default Header;

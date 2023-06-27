@@ -34,7 +34,7 @@ function AuthorModal({ isOpen, onClose, onSubmit, initialAuthor }) {
         </div>
         <div className="mb-4">
           <label className="block text-gray-300 text-sm font-bold mb-2">
-            Author:
+            Bio
           </label>
           <input
             type="text"

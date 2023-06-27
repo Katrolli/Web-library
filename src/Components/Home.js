@@ -1,7 +1,7 @@
 import { useContext } from "react";
 import { useNavigate } from "react-router-dom";
 import { AuthContext } from "../Auth/AuthContext";
-import AdminPanel from "../admin-panel";
+import Header from "./Header";
 
 function Home() {
   const { user, logout } = useContext(AuthContext);
@@ -11,12 +11,13 @@ function Home() {
     logout();
     navigate("/login");
   };
-  console.log("user here", user);
+  // console.log("user here", user);
   if (user.user.role[0] === "Admin") {
     return (
       <div>
-        <button onClick={handleLogout}>Logout</button>
-        <AdminPanel />
+        {/* <button onClick={handleLogout}>Logout</button> */}
+        <Header />
+        {/* <AdminPanel /> */}
       </div>
     );
   }

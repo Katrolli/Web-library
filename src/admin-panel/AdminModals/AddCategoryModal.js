@@ -1,13 +1,12 @@
 import Modal from "../../Components/Modal";
 import { useState } from "react";
 
-function AddCategoryModal({ isOpen, onClose, onSubmit }) {
+function AddCategoryModal({ onClose, onSubmit }) {
   const [orientation, setOrientation] = useState("");
-
-  if (!isOpen) return null;
+  const [priority, setPriority] = useState(0);
 
   return (
-    <Modal isOpen={isOpen} onClose={onClose}>
+    <Modal isOpen={true} onClose={onClose}>
       <div className="text-black flex flex-col">
         <div className=" justify-center text-center">
           <p className="text-white">Create a new Category</p>
@@ -16,7 +15,7 @@ function AddCategoryModal({ isOpen, onClose, onSubmit }) {
           className="space-y-4"
           onSubmit={(e) => {
             e.preventDefault();
-            onSubmit(orientation);
+            onSubmit(orientation, priority);
           }}
         >
           <input
@@ -26,6 +25,14 @@ function AddCategoryModal({ isOpen, onClose, onSubmit }) {
             onChange={(e) => setOrientation(e.target.value)}
             required
             placeholder="Orientation"
+          />
+          <input
+            className="w-full p-2 border-2 border-gray-300 rounded-md"
+            type="number"
+            value={priority}
+            onChange={(e) => setPriority(e.target.value)}
+            required
+            placeholder="Priority"
           />
 
           <button
