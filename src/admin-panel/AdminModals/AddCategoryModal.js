@@ -33,6 +33,8 @@ function AddCategoryModal({ onClose, onSubmit }) {
             onChange={(e) => setPriority(e.target.value)}
             required
             placeholder="Priority"
+            min="1"
+            max="5"
           />
 
           <button

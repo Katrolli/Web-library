@@ -70,6 +70,8 @@ function AddBookModal({ onClose, onSubmit }) {
               required
               isMulti
               value={categoryId}
+              menuPortalTarget={document.body}
+              styles={{ menuPortal: (base) => ({ ...base, zIndex: 9999 }) }}
               onChange={setCategoryId}
               options={categories.map((category) => ({
                 value: category.id,

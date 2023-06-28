@@ -48,7 +48,7 @@ const ReportPage = () => {
                       className="py-3.5 pl-4 pr-3 text-left text-sm font-semibold text-gray-900 sm:pl-0"
                     >
                       <span className="group inline-flex">
-                        Name
+                        Author
                         <span className="invisible ml-2 flex-none rounded text-gray-400 group-hover:visible group-focus:visible">
                           <ChevronDownIcon
                             className="h-5 w-5"

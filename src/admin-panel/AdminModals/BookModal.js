@@ -21,8 +21,16 @@ function BookModal({ isOpen, onClose, onSubmit, initialBook }) {
     setFile(e.target.files[0]);
   }
 
+  const getImageUrl = () => {
+    if (typeof file === "object") {
+      return URL.createObjectURL(file);
+    }
+    return "http://localhost:5142/" + file;
+  };
+
   useEffect(() => {
     if (isOpen) {
+      console.log(initialBook.authorId, "lalala");
       setTitle(initialBook.title);
       setAuthorId(initialBook.authorId);
       setCategoryId(
@@ -34,7 +42,6 @@ function BookModal({ isOpen, onClose, onSubmit, initialBook }) {
       setFile(initialBook.imageUrl);
     }
   }, [isOpen]);
-
   return (
     <Modal isOpen={isOpen} onClose={onClose}>
       <form
@@ -83,6 +90,8 @@ function BookModal({ isOpen, onClose, onSubmit, initialBook }) {
               required
               isMulti
               value={categoryId}
+              menuPortalTarget={document.body}
+              styles={{ menuPortal: (base) => ({ ...base, zIndex: 9999 }) }}
               onChange={setCategoryId}
               options={categories.map((category) => ({
                 value: category.id,
@@ -96,9 +105,7 @@ function BookModal({ isOpen, onClose, onSubmit, initialBook }) {
             Book Image:
           </label>
           <input type="file" onChange={handleFileChange} />
-          {file ? (
-            <img src={"http://localhost:5142/" + file} alt="book preview" />
-          ) : null}
+          {file ? <img src={getImageUrl()} alt="book preview" /> : null}
         </div>
 
         <div className="flex items-center justify-between">

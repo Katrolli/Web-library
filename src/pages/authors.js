@@ -123,6 +123,9 @@ const AuthorsPage = () => {
   };
 
   const renderedAuthors = authors.map((author) => {
+    let dateStr = author.createdAt;
+    let date = new Date(dateStr);
+    console.log(author);
     return (
       <tr key={author.id}>
         <td className="whitespace-nowrap py-4 pl-4 pr-3 text-sm font-medium text-gray-900 sm:pl-0 text-left">
@@ -130,6 +133,12 @@ const AuthorsPage = () => {
         </td>
         <td className="whitespace-nowrap px-3 py-4 text-sm text-gray-500 text-left">
           {author.bio}
+        </td>
+        <td className="whitespace-nowrap px-3 py-4 text-sm text-gray-500 text-left">
+          {date.toLocaleDateString()}
+        </td>
+        <td className="whitespace-nowrap px-3 py-4 text-sm text-gray-500 text-left">
+          {author.createdBy}
         </td>
 
         <td className="whitespace-nowrap px-3 py-4 text-sm text-gray-500 text-left">
@@ -187,6 +196,24 @@ const AuthorsPage = () => {
                       className="px-3 py-3.5 text-left text-sm font-semibold text-gray-900"
                     >
                       <span className="group inline-flex">Bio</span>
+                    </th>
+                    <th
+                      scope="col"
+                      className="px-3 py-3.5 text-left text-sm font-semibold text-gray-900"
+                    >
+                      <span className="group inline-flex">
+                        Created at
+                        <span className="ml-2 flex-none rounded bg-gray-100 text-gray-900 group-hover:bg-gray-200"></span>
+                      </span>
+                    </th>
+                    <th
+                      scope="col"
+                      className="px-3 py-3.5 text-left text-sm font-semibold text-gray-900"
+                    >
+                      <span className="group inline-flex">
+                        Created by
+                        <span className="ml-2 flex-none rounded bg-gray-100 text-gray-900 group-hover:bg-gray-200"></span>
+                      </span>
                     </th>
 
                     <th
