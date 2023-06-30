@@ -5,7 +5,6 @@ function AddAuthorModal({ isOpen, onClose, onSubmit }) {
   const [name, setName] = useState("");
   const [bio, setBio] = useState("");
   const [email, setEmail] = useState("");
-  const [surname, setSurname] = useState("");
   const [password, setPassword] = useState("");
   const [username, setUsername] = useState("");
 
@@ -21,7 +20,7 @@ function AddAuthorModal({ isOpen, onClose, onSubmit }) {
           className="space-y-4"
           onSubmit={(e) => {
             e.preventDefault();
-            onSubmit(name, bio, password, surname, email, username);
+            onSubmit(name, bio, password, email, username);
           }}
         >
           <input
@@ -56,18 +55,11 @@ function AddAuthorModal({ isOpen, onClose, onSubmit }) {
             required
             placeholder="password"
           />
+
           <input
             className="w-full p-2 border-2 border-gray-300 rounded-md"
             type="text"
-            value={name}
-            onChange={(e) => setSurname(e.target.value)}
-            required
-            placeholder="Surname"
-          />
-          <input
-            className="w-full p-2 border-2 border-gray-300 rounded-md"
-            type="text"
-            value={name}
+            value={username}
             onChange={(e) => setUsername(e.target.value)}
             required
             placeholder="Username"

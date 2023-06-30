@@ -1,30 +1,18 @@
 import { createContext, useState } from "react";
-import axios from "axios";
+import api from "../service";
 
 const StateContex = createContext();
 
 function StateProvider({ children }) {
-  // const [state, setState] = useState({
-  //   books: [],
-  //   categories: [],
-  //   authors: [],
-  // });
   const [books, setBooks] = useState([]);
   const [authors, setAuthors] = useState([]);
   const [categories, setCategories] = useState([]);
 
-  // const setData = (key, value) => {
-  //   setState((prevState) => ({ ...prevState, [key]: value }));
-  // };
+  const apiUrl = process.env.REACT_APP_API_URL;
 
   const getBooks = async () => {
     try {
-      const token = JSON.parse(localStorage.getItem("token")); // Retrieve the JWT token from storage
-      const response = await axios.get("http://localhost:5142/api/Book", {
-        headers: {
-          Authorization: `Bearer ${token}`, // Include the JWT token in the Authorization header
-        },
-      });
+      const response = await api.get("/Book");
       setBooks(response.data);
     } catch (error) {
       console.error(error); // Handle any errors
@@ -33,12 +21,7 @@ function StateProvider({ children }) {
 
   const getAuthors = async () => {
     try {
-      const token = JSON.parse(localStorage.getItem("token")); // Retrieve the JWT token from storage
-      const response = await axios.get("http://localhost:5142/api/User", {
-        headers: {
-          Authorization: `Bearer ${token}`, // Include the JWT token in the Authorization header
-        },
-      });
+      const response = await api.get("/User");
       const authors = response.data.filter((auth) => auth.role === "Author");
       setAuthors(authors);
     } catch (error) {
@@ -48,12 +31,7 @@ function StateProvider({ children }) {
 
   const getCategories = async () => {
     try {
-      const token = JSON.parse(localStorage.getItem("token")); // Retrieve the JWT token from storage
-      const response = await axios.get("http://localhost:5142/api/Category", {
-        headers: {
-          Authorization: `Bearer ${token}`, // Include the JWT token in the Authorization header
-        },
-      });
+      const response = await api.get("/Category");
       setCategories(response.data);
     } catch (error) {
       console.error(error); // Handle any errors
@@ -70,6 +48,7 @@ function StateProvider({ children }) {
     getBooks,
     getAuthors,
     getCategories,
+    apiUrl,
   };
 
   return <StateContex.Provider value={values}>{children}</StateContex.Provider>;

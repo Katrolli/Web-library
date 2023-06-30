@@ -1,6 +1,6 @@
 import { useContext, useState, useEffect } from "react";
 import { StateContex } from "../StateProvider/StateProvider";
-import axios from "axios";
+import api from "../service";
 
 import { PencilIcon } from "@heroicons/react/20/solid";
 import { TrashIcon } from "@heroicons/react/20/solid";
@@ -9,7 +9,7 @@ import AddAuthorModal from "../admin-panel/AdminModals/AddAuthorModal";
 import AuthorModal from "../admin-panel/AdminModals/AuthorModal";
 
 const AuthorsPage = () => {
-  const { authors, getAuthors } = useContext(StateContex);
+  const { authors, getAuthors, apiUrl } = useContext(StateContex);
 
   const [selectedType, setSelectedType] = useState(null);
   const [selectedItem, setSelectedItem] = useState(null);
@@ -32,26 +32,16 @@ const AuthorsPage = () => {
     setIsEditModalOpen(false);
   };
 
-  const addAuthor = async (name, bio, password, surname, email, username) => {
-    const token = JSON.parse(localStorage.getItem("token"));
+  const addAuthor = async (name, bio, password, email, username) => {
     try {
-      await axios.post(
-        "http://localhost:5142/api/User",
-        {
-          name: name,
-          bio: bio,
-          roleId: 2,
-          Password: password,
-          Email: email,
-          Surname: surname,
-          UserName: username,
-        },
-        {
-          headers: {
-            Authorization: `Bearer ${token}`, // Include the JWT token in the Authorization header
-          },
-        }
-      );
+      await api.post(`${apiUrl}/User`, {
+        name: name,
+        bio: bio,
+        roleId: 2,
+        Password: password,
+        Email: email,
+        UserName: username,
+      });
       getAuthors();
       setIsAddAuthorModal(false);
     } catch (error) {
@@ -73,35 +63,20 @@ const AuthorsPage = () => {
   };
 
   const deleteAuthor = async (id) => {
-    const token = JSON.parse(localStorage.getItem("token"));
-    await axios.delete(`http://localhost:5142/api/User/${id}`, {
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
-    });
+    await api.delete(`${apiUrl}/User/${id}`);
     getAuthors();
   };
 
-  const handleAuthorEdit = async (name, surname, email, username, bio) => {
-    const token = JSON.parse(localStorage.getItem("token"));
+  const handleAuthorEdit = async (name, email, username, bio) => {
     const updatedItem = {
       Name: name,
-      Surname: surname,
       Email: email,
       UserName: username,
       Bio: bio,
     };
 
     try {
-      await axios.put(
-        `http://localhost:5142/api/User/${selectedItem.id}`,
-        updatedItem,
-        {
-          headers: {
-            Authorization: `Bearer ${token}`, // Include the JWT token in the Authorization header
-          },
-        }
-      );
+      await api.put(`${apiUrl}/User/${selectedItem.id}`, updatedItem);
       getAuthors();
       handleCloseEditModal();
     } catch (error) {

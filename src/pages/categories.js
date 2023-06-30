@@ -1,6 +1,6 @@
 import { useContext, useState, useEffect } from "react";
 import { StateContex } from "../StateProvider/StateProvider";
-import axios from "axios";
+import api from "../service";
 
 import { PencilIcon } from "@heroicons/react/20/solid";
 import { TrashIcon } from "@heroicons/react/20/solid";
@@ -9,7 +9,8 @@ import AddCategoryModal from "../admin-panel/AdminModals/AddCategoryModal";
 import CategoryModal from "../admin-panel/AdminModals/CategoryModal";
 
 const CategoriesPage = () => {
-  const { categories, setCategories, getCategories } = useContext(StateContex);
+  const { categories, setCategories, getCategories, apiUrl } =
+    useContext(StateContex);
 
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
   const [selectedItem, setSelectedItem] = useState(null);
@@ -21,20 +22,11 @@ const CategoriesPage = () => {
   }, []);
 
   const addCategory = async (orientation, priority) => {
-    const token = JSON.parse(localStorage.getItem("token"));
     try {
-      await axios.post(
-        "http://localhost:5142/api/Category",
-        {
-          Name: orientation,
-          Priority: parseInt(priority),
-        },
-        {
-          headers: {
-            Authorization: `Bearer ${token}`, // Include the JWT token in the Authorization header
-          },
-        }
-      );
+      await api.post(`${apiUrl}/Category`, {
+        Name: orientation,
+        Priority: parseInt(priority),
+      });
       getCategories();
       setIsAddCategoryModal(false);
     } catch (error) {
@@ -68,12 +60,7 @@ const CategoriesPage = () => {
   };
 
   const deleteCategory = async (id) => {
-    const token = JSON.parse(localStorage.getItem("token"));
-    await axios.delete(`http://localhost:5142/api/Category/${id}`, {
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
-    });
+    await api.delete(`${apiUrl}/Category/${id}`);
     const updatedCategories = categories.filter((cat) => cat.id !== id);
 
     setCategories(updatedCategories);
@@ -85,10 +72,7 @@ const CategoriesPage = () => {
       name,
       priority,
     };
-    await axios.put(
-      `http://localhost:5142/api/Category/${updatedItem.id}`,
-      updatedItem
-    );
+    await api.put(`${apiUrl}/Category/${updatedItem.id}`, updatedItem);
     const updatedCategories = categories.map((cat) =>
       cat.id === updatedItem.id ? updatedItem : cat
     );
@@ -98,7 +82,7 @@ const CategoriesPage = () => {
   };
 
   const renderedCategories = categories.map((cat) => {
-    console.log(cat);
+    // console.log(cat);
     let dateStr = cat.createdAt;
     let date = new Date(dateStr);
     return (

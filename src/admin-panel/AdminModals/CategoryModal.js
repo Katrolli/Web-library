@@ -2,11 +2,11 @@ import Modal from "../../Components/Modal";
 import { useState, useEffect } from "react";
 
 function CategoryModal({ isOpen, onClose, onSubmit, initialCategory }) {
-  const [name, setName] = useState("");
-  const [priority, setPriority] = useState(null);
+  const [name, setName] = useState(initialCategory?.name || "");
+  const [priority, setPriority] = useState(initialCategory?.priority || "");
 
   useEffect(() => {
-    if (isOpen) {
+    if (isOpen && initialCategory) {
       setName(initialCategory.name);
       setPriority(initialCategory.priority);
     }

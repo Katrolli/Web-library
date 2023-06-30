@@ -31,7 +31,14 @@ const AuthProvider = ({ children }) => {
   const isAdmin = user?.user?.role?.includes("Admin") || false;
   const isAuthor = user?.user?.role?.includes("Author") || false;
 
-  const values = { user, isAdmin, isAuthor, setUser, setAuthData, logout };
+  const values = {
+    user,
+    isAdmin,
+    isAuthor,
+    setUser,
+    setAuthData,
+    logout,
+  };
 
   return <AuthContext.Provider value={values}>{children}</AuthContext.Provider>;
 };

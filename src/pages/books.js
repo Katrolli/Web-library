@@ -1,6 +1,8 @@
 import { useContext, useEffect, useState } from "react";
 import { StateContex } from "../StateProvider/StateProvider";
-import axios from "axios";
+import api from "../service";
+import BookCard from "../Components/BookCard";
+import { createFormData } from "../utils";
 
 import { TrashIcon } from "@heroicons/react/20/solid";
 import { PencilIcon } from "@heroicons/react/20/solid";
@@ -10,11 +12,12 @@ import BookModal from "../admin-panel/AdminModals/BookModal";
 import AddBookModal from "../admin-panel/AdminModals/AddBookModal";
 
 const BooksPage = () => {
-  const { books, setBooks, getBooks } = useContext(StateContex);
+  const { books, setBooks, getBooks, apiUrl } = useContext(StateContex);
   const [isAddoBookModal, setIsAddBookModal] = useState(false);
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
   const [selectedType, setSelectedType] = useState(null);
   const [selectedItem, setSelectedItem] = useState(null);
+
   useEffect(() => {
     getBooks();
   }, []);
@@ -32,30 +35,20 @@ const BooksPage = () => {
   };
 
   const handleBookEdit = async (title, authorId, categoryIds, image) => {
-    const token = JSON.parse(localStorage.getItem("token"));
     try {
-      const formData = new FormData();
-      formData.append("Title", title);
-      formData.append("AuthorId", authorId);
-      formData.append("Description", "test");
-      for (var i = 0; i < categoryIds.length; i++) {
-        formData.append("categoryIds[]", categoryIds[i].value);
-      }
+      let data = createFormData({
+        Title: title,
+        Description: "test",
+        authorId: authorId,
+        "categoryIds[]": categoryIds.map((cat) => cat.value),
+        Cover: image,
+      });
 
-      if (image) {
-        formData.append("Cover", image);
-      }
-
-      await axios.put(
-        `http://localhost:5142/api/Book/${selectedItem.id}`,
-        formData,
-        {
-          headers: {
-            "Content-Type": "multipart/form-data",
-            Authorization: `Bearer ${token}`,
-          },
-        }
-      );
+      await api.put(`/Book/${selectedItem.id}`, data, {
+        headers: {
+          "Content-Type": "multipart/form-data",
+        },
+      });
       getBooks();
       handleCloseEditModal();
     } catch (error) {
@@ -77,20 +70,17 @@ const BooksPage = () => {
   };
 
   const addBook = async (title, description, authorId, categoryIds, file) => {
-    const token = JSON.parse(localStorage.getItem("token"));
-    const formData = new FormData();
-    formData.append("Title", title);
-    formData.append("Description", description);
-    formData.append("authorId", authorId);
-    formData.append("Cover", file);
-    for (var i = 0; i < categoryIds.length; i++) {
-      formData.append("categoryIds[]", categoryIds[i]);
-    }
+    const data = createFormData({
+      Title: title,
+      Description: description,
+      authorId: authorId,
+      Cover: file,
+      "categoryIds[]": categoryIds,
+    });
 
     try {
-      await axios.post(`http://localhost:5142/api/Book`, formData, {
+      await api.post(`${apiUrl}/Book`, data, {
         headers: {
-          Authorization: `Bearer ${token}`,
           "Content-Type": "multipart/form-data",
         },
       });
@@ -116,12 +106,7 @@ const BooksPage = () => {
   };
 
   const deleteBook = async (id) => {
-    const token = JSON.parse(localStorage.getItem("token"));
-    await axios.delete(`http://localhost:5142/api/Book/${id}`, {
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
-    });
+    await api.delete(`${apiUrl}/Book/${id}`);
     const updatedBooks = books.filter((book) => book.id !== id);
 
     setBooks(updatedBooks);
@@ -129,14 +114,13 @@ const BooksPage = () => {
   };
 
   const renderedBooks = books.map((book) => {
-    // const imageUrl = "http://localhost:5142/" + book.imageUrl;
     // console.log(book);
     let dateStr = book.createdAt;
     let date = new Date(dateStr);
     return (
       <tr key={book.id}>
         <td className="whitespace-nowrap py-4 pl-4 pr-3 text-sm font-medium text-gray-900 sm:pl-0 text-left">
-          <a>{book.title}</a>
+          <BookCard book={book} />
         </td>
         <td className="whitespace-nowrap px-3 py-4 text-sm text-gray-500 text-left">
           {book.author}

@@ -30,7 +30,6 @@ function BookModal({ isOpen, onClose, onSubmit, initialBook }) {
 
   useEffect(() => {
     if (isOpen) {
-      console.log(initialBook.authorId, "lalala");
       setTitle(initialBook.title);
       setAuthorId(initialBook.authorId);
       setCategoryId(

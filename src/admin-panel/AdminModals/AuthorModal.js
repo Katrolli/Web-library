@@ -3,14 +3,16 @@ import { useState, useEffect } from "react";
 function AuthorModal({ isOpen, onClose, onSubmit, initialAuthor }) {
   const [name, setName] = useState("");
   const [bio, setBio] = useState("");
-  const [surname, setSurname] = useState("");
   const [email, setEmail] = useState("");
   const [username, setUsername] = useState("");
 
   useEffect(() => {
     if (isOpen) {
+      console.log(initialAuthor);
       setName(initialAuthor.name);
       setBio(initialAuthor.bio);
+      setEmail(initialAuthor.email);
+      setUsername(initialAuthor.userName);
     }
   }, [isOpen]);
 
@@ -19,7 +21,7 @@ function AuthorModal({ isOpen, onClose, onSubmit, initialAuthor }) {
       <form
         onSubmit={(e) => {
           e.preventDefault();
-          onSubmit(name, surname, email, username, bio);
+          onSubmit(name, email, username, bio);
         }}
       >
         <div className="mb-4">
@@ -35,19 +37,7 @@ function AuthorModal({ isOpen, onClose, onSubmit, initialAuthor }) {
             className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-300 leading-tight focus:outline-none focus:shadow-outline bg-gray-800"
           />
         </div>
-        <div className="mb-4">
-          <label className="block text-gray-300 text-sm font-bold mb-2">
-            Surname
-          </label>
-          <input
-            type="text"
-            name="Surname"
-            value={surname}
-            onChange={(e) => setSurname(e.target.value)}
-            required
-            className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-300 leading-tight focus:outline-none focus:shadow-outline bg-gray-800"
-          />
-        </div>
+
         <div className="mb-4">
           <label className="block text-gray-300 text-sm font-bold mb-2">
             Email
