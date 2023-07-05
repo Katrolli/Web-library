@@ -13,6 +13,7 @@ import AddBookModal from "../admin-panel/AdminModals/AddBookModal";
 
 const BooksPage = () => {
   const { books, setBooks, getBooks, apiUrl } = useContext(StateContex);
+  // const {books, loadingBooks, errorBooks} = useBooks()
   const [isAddoBookModal, setIsAddBookModal] = useState(false);
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
   const [selectedType, setSelectedType] = useState(null);

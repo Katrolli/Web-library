@@ -18,14 +18,13 @@ const Register = () => {
 
     try {
       const response = await axios.post(
-        "http://localhost:5096/Account/register",
+        "http://5.75.136.216/:5096/Account/register",
         {
           userName: username,
           password: password,
           email: email,
         }
       );
-
     } catch (err) {
       console.error(err);
       setError("Failed to register.");

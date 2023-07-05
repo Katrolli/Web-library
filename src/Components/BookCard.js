@@ -1,4 +1,5 @@
-import { useState } from "react";
+import { useState, useContext } from "react";
+import { StateContex } from "../StateProvider/StateProvider";
 import Card from "@mui/material/Card";
 import Modal from "./Modal";
 import CardActionArea from "@mui/material/CardActionArea";
@@ -6,9 +7,12 @@ import CardContent from "@mui/material/CardContent";
 import CardMedia from "@mui/material/CardMedia";
 import Typography from "@mui/material/Typography";
 import Box from "@mui/system/Box";
+import Divider from "@mui/material/Divider";
 
 function BookCard({ book }) {
   const [isModalOpen, setIsModalOpen] = useState(false);
+
+  const { baseUrl } = useContext(StateContex);
 
   const handleOpenModal = () => {
     setIsModalOpen(true);
@@ -17,7 +21,7 @@ function BookCard({ book }) {
   const handleCloseModal = () => {
     setIsModalOpen(false);
   };
-  let imageUrl = "http://localhost:5142/" + book.imageUrl;
+  let imageUrl = baseUrl + "/" + book.imageUrl;
 
   return (
     <div>
@@ -27,17 +31,18 @@ function BookCard({ book }) {
           display="flex"
           justifyContent="center"
           alignItems="center"
-          height="40vh" // reduce the height
+          height="60vh"
+          padding="0.1em"
         >
           <Card
             sx={{
-              maxWidth: 400, // Change card width
-              maxHeight: 600, // Change card height
+              maxWidth: 400,
+              minHeight: 600,
               display: "flex",
               flexDirection: "column",
               justifyContent: "center",
               alignItems: "center",
-              backgroundColor: "Lavender", // Set a non-white background color
+              backgroundColor: "#d4b996",
               border: "3px solid brown",
               boxSizing: "border-box",
               padding: 2,
@@ -49,31 +54,49 @@ function BookCard({ book }) {
               <CardMedia
                 component="img"
                 alt={book.title}
-                height="250" // Increase image height
-                width="250" // Add image width
+                height="auto"
                 image={imageUrl}
                 title={book.title}
+                sx={{ maxHeight: "300px", overflow: "auto" }}
               />
-              <CardContent>
+              <CardContent sx={{ textAlign: "center", overflow: "auto" }}>
                 <Typography
                   gutterBottom
                   variant="h5"
                   component="div"
                   align="center"
+                  sx={{
+                    paddingBottom: "1em",
+                    fontFamily: "Merriweather, serif",
+                    whiteSpace: "normal",
+                  }}
                 >
                   {book.title}
                 </Typography>
+                <Divider />
                 <Typography
                   variant="body2"
                   color="text.secondary"
                   align="center"
+                  sx={{
+                    marginTop: "1em",
+                    marginBottom: "1em",
+                    fontFamily: "Roboto, sans-serif",
+                    whiteSpace: "normal",
+                  }}
                 >
                   {book.author}
                 </Typography>
+                <Divider />
                 <Typography
                   variant="body2"
                   color="text.secondary"
                   align="center"
+                  sx={{
+                    paddingTop: "1em",
+                    fontFamily: "Roboto, sans-serif",
+                    whiteSpace: "normal",
+                  }}
                 >
                   {book.description}
                 </Typography>

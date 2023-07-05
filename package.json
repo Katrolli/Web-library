@@ -21,11 +21,13 @@
     "web-vitals": "^2.1.4"
   },
   "scripts": {
-    "start": "react-scripts start",
+    "start": "cp .env.prod .env && react-scripts start",
     "server": "json-server -p 3001 --watch db.json",
-    "build": "react-scripts build",
+    "build": "cp .env.prod .env && react-scripts build",
     "test": "react-scripts test",
-    "eject": "react-scripts eject"
+    "eject": "react-scripts eject",
+    "deploy": "cp ./build/index.html ./build/200.html && surge ./build",
+    "buildDeploy": "npm run build && npm run deploy"
   },
   "eslintConfig": {
     "extends": [
@@ -46,6 +48,7 @@
     ]
   },
   "devDependencies": {
+    "surge": "^0.23.1",
     "tailwindcss": "^3.3.2"
   }
 }

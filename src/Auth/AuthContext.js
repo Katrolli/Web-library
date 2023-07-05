@@ -7,18 +7,6 @@ const AuthProvider = ({ children }) => {
     ? JSON.parse(localStorage.getItem("user"))
     : null;
   const [user, setUser] = useState(localStorageUser);
-
-  // useEffect(() => {
-  //   const onRefresh = (e) => {
-  //     setUser(null)
-  //     localStorage.clear()
-  //     };
-
-  //   window.addEventListener("beforeunload", onRefresh);
-  //   return () => {
-  //     window.removeEventListener("beforeunload", onRefresh);
-  //   };
-  // }, []);
   const logout = () => {
     setUser(null);
     localStorage.removeItem("user");

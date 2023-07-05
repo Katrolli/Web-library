@@ -1,9 +1,11 @@
 import React, { useContext, useState } from "react";
 import { AuthContext } from "../Auth/AuthContext";
+import { StateContex } from "../StateProvider/StateProvider";
 import axios from "axios";
 
 function LoginPage() {
   const { setUser } = useContext(AuthContext);
+  const { apiUrl } = useContext(StateContex);
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
 
@@ -11,9 +13,9 @@ function LoginPage() {
     event.preventDefault();
 
     try {
-      const response = await axios.post("http://localhost:5142/Account/login", {
+      const response = await axios.post(apiUrl + "/Account/login", {
         username,
-        password, // You might want to encrypt the password before sending it
+        password,
       });
 
       const userData = {

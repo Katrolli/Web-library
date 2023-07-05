@@ -1,5 +1,6 @@
 import { useContext, useEffect, useState } from "react";
 import { StateContex } from "../../StateProvider/StateProvider";
+import { AuthContext } from "../../Auth/AuthContext";
 import Modal from "../../Components/Modal";
 import Select from "react-select";
 
@@ -8,8 +9,9 @@ function BookModal({ isOpen, onClose, onSubmit, initialBook }) {
   const [authorId, setAuthorId] = useState("");
   const [categoryId, setCategoryId] = useState([]);
   const [file, setFile] = useState();
+  const { user, isAuthor } = useContext(AuthContext);
 
-  const { authors, categories, getCategories, getAuthors } =
+  const { authors, categories, getCategories, getAuthors, baseUrl } =
     useContext(StateContex);
 
   useEffect(() => {
@@ -25,7 +27,7 @@ function BookModal({ isOpen, onClose, onSubmit, initialBook }) {
     if (typeof file === "object") {
       return URL.createObjectURL(file);
     }
-    return "http://localhost:5142/" + file;
+    return baseUrl + "/" + file;
   };
 
   useEffect(() => {
@@ -50,7 +52,7 @@ function BookModal({ isOpen, onClose, onSubmit, initialBook }) {
         }}
       >
         <div className="mb-4">
-          <label className="block text-gray-300 text-sm font-bold mb-2">
+          <label className="block text-black text-sm font-bold mb-2">
             Title:
           </label>
           <input
@@ -59,18 +61,19 @@ function BookModal({ isOpen, onClose, onSubmit, initialBook }) {
             value={title}
             onChange={(e) => setTitle(e.target.value)}
             required
-            className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-300 leading-tight focus:outline-none focus:shadow-outline bg-gray-800"
+            className="shadow appearance-none border rounded w-full py-2 px-3 text-black leading-tight focus:outline-none focus:shadow-outline  bg-gray-400"
           />
         </div>
         <div className="mb-4">
-          <label className="block text-gray-300 text-sm font-bold mb-2">
+          <label className="block text-black text-sm font-bold mb-2">
             Author:
           </label>
           <select
             value={authorId}
             onChange={(e) => setAuthorId(parseInt(e.target.value))}
             required
-            className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-300 leading-tight focus:outline-none focus:shadow-outline bg-gray-800"
+            className="shadow appearance-none border rounded w-full py-2 px-3 text-black leading-tight focus:outline-none focus:shadow-outline  bg-gray-400"
+            disabled={isAuthor} // Add this line
           >
             <option value="">Select Author</option>
             {authors.map((author) => (
@@ -81,7 +84,7 @@ function BookModal({ isOpen, onClose, onSubmit, initialBook }) {
           </select>
         </div>
         <div className="mb-6">
-          <label className="block text-gray-300 text-sm font-bold mb-2">
+          <label className="block text-black text-sm font-bold mb-2">
             Category:
           </label>
           <div className="w-full p-2 border-2 border-gray-300 rounded-md">
@@ -100,17 +103,16 @@ function BookModal({ isOpen, onClose, onSubmit, initialBook }) {
           </div>
         </div>
         <div className="mb-4">
-          <label className="block text-gray-300 text-sm font-bold mb-2">
+          <label className="block text-black text-sm font-bold mb-2">
             Book Image:
           </label>
           <input type="file" onChange={handleFileChange} />
           {file ? <img src={getImageUrl()} alt="book preview" /> : null}
         </div>
-
         <div className="flex items-center justify-between">
           <button
             type="submit"
-            className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
+            className="bg-gray-200 hover:bg-blue-700 text-black font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
           >
             Update book
           </button>

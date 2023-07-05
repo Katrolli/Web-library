@@ -9,6 +9,7 @@ function StateProvider({ children }) {
   const [categories, setCategories] = useState([]);
 
   const apiUrl = process.env.REACT_APP_API_URL;
+  const baseUrl = process.env.REACT_APP_BASE_URL;
 
   const getBooks = async () => {
     try {
@@ -49,6 +50,7 @@ function StateProvider({ children }) {
     getAuthors,
     getCategories,
     apiUrl,
+    baseUrl,
   };
 
   return <StateContex.Provider value={values}>{children}</StateContex.Provider>;
