@@ -21,7 +21,7 @@ function CategoryModal({ isOpen, onClose, onSubmit, initialCategory }) {
         }}
       >
         <div className="mb-4">
-          <label className="block text-gray-300 text-sm font-bold mb-2">
+          <label className="block text-black text-sm font-bold mb-2">
             Name:
           </label>
           <input
@@ -30,11 +30,11 @@ function CategoryModal({ isOpen, onClose, onSubmit, initialCategory }) {
             value={name}
             onChange={(e) => setName(e.target.value)}
             required
-            className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-300 leading-tight focus:outline-none focus:shadow-outline bg-gray-800"
+            className="shadow appearance-none border rounded w-full py-2 px-3 text-black leading-tight focus:outline-none focus:shadow-outline bg-gray-300"
           />
         </div>
         <div className="mb-4">
-          <label className="block text-gray-300 text-sm font-bold mb-2">
+          <label className="block text-black text-sm font-bold mb-2">
             Priority:
           </label>
           <input
@@ -45,13 +45,13 @@ function CategoryModal({ isOpen, onClose, onSubmit, initialCategory }) {
             min="1"
             max="5"
             required
-            className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-300 leading-tight focus:outline-none focus:shadow-outline bg-gray-800"
+            className="shadow appearance-none border rounded w-full py-2 px-3 text-black leading-tight focus:outline-none focus:shadow-outline bg-gray-300"
           />
         </div>
         <div className="flex items-center justify-between">
           <button
             type="submit"
-            className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
+            className="bg-gray-300 hover:bg-blue-700 text-black font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
           >
             Update Category
           </button>

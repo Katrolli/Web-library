@@ -14,7 +14,7 @@ function AddAuthorModal({ isOpen, onClose, onSubmit }) {
     <Modal isOpen={isOpen} onClose={onClose}>
       <div className="text-black flex flex-col">
         <div className=" justify-center text-center">
-          <p className="text-white">Create a new author</p>
+          <p className="text-black">Create a new author</p>
         </div>
         <form
           className="space-y-4"
@@ -67,7 +67,7 @@ function AddAuthorModal({ isOpen, onClose, onSubmit }) {
 
           <button
             type="submit"
-            className="w-full p-2 bg-blue-600 text-white rounded-md hover:bg-blue-700"
+            className="w-full p-2 bg-gray-200 text-black rounded-md hover:bg-blue-700"
           >
             Add Author
           </button>

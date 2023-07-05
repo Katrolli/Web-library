@@ -9,7 +9,7 @@ function BookModal({ isOpen, onClose, onSubmit, initialBook }) {
   const [authorId, setAuthorId] = useState("");
   const [categoryId, setCategoryId] = useState([]);
   const [file, setFile] = useState();
-  const { user, isAuthor } = useContext(AuthContext);
+  const { isAuthor } = useContext(AuthContext);
 
   const { authors, categories, getCategories, getAuthors, baseUrl } =
     useContext(StateContex);
@@ -73,7 +73,7 @@ function BookModal({ isOpen, onClose, onSubmit, initialBook }) {
             onChange={(e) => setAuthorId(parseInt(e.target.value))}
             required
             className="shadow appearance-none border rounded w-full py-2 px-3 text-black leading-tight focus:outline-none focus:shadow-outline  bg-gray-400"
-            disabled={isAuthor} // Add this line
+            disabled={isAuthor}
           >
             <option value="">Select Author</option>
             {authors.map((author) => (

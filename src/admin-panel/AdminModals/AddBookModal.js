@@ -37,7 +37,7 @@ function AddBookModal({ onClose, onSubmit }) {
     <Modal isOpen={true} onClose={onClose}>
       <div className="text-black flex flex-col">
         <div className=" justify-center text-center">
-          <p className="text-white">Create a new book</p>
+          <p className="text-black">Create a new book</p>
         </div>
         <form className="space-y-4" onSubmit={onFormSubmit}>
           <input
@@ -56,16 +56,16 @@ function AddBookModal({ onClose, onSubmit }) {
             required
             placeholder="Description"
           />
-          <input type="file" onChange={handleChange} className="text-white" />
+          <input type="file" onChange={handleChange} className="text-black" />
           {file ? (
             <img
               src={URL.createObjectURL(file)}
               alt="Chosen Preview"
-              className="text-white h-20 w-40 object-cover"
+              className="text-black h-20 w-40 object-cover"
             />
           ) : null}
 
-          <div className="w-full p-2 border-2 border-gray-300 rounded-md">
+          <div className="w-full p-2 border-2 border-gray-300 text-black rounded-md">
             <Select
               required
               isMulti
@@ -81,7 +81,7 @@ function AddBookModal({ onClose, onSubmit }) {
           </div>
           {isAdmin ? (
             <select
-              className="w-full p-2 border-2 border-gray-300 rounded-md"
+              className="w-full p-2 border-2 border-gray-300 text-black rounded-md"
               value={authorId}
               onChange={(e) => setAuthorId(parseInt(e.target.value))}
               required
@@ -96,7 +96,7 @@ function AddBookModal({ onClose, onSubmit }) {
           ) : null}
           <button
             type="submit"
-            className="w-full p-2 bg-blue-600 text-white rounded-md hover:bg-blue-700"
+            className="w-full p-2 bg-gray-200 text-black rounded-md hover:bg-blue-700"
           >
             Add Book
           </button>

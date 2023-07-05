@@ -39,7 +39,7 @@ function AddCategoryModal({ onClose, onSubmit }) {
 
           <button
             type="submit"
-            className="w-full p-2 bg-blue-600 text-white rounded-md hover:bg-blue-700"
+            className="w-full p-2 bg-gray-200 text-black rounded-md hover:bg-blue-700"
           >
             Add Category
           </button>
