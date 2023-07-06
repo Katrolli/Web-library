@@ -11,7 +11,6 @@ function AddBookModal({ onClose, onSubmit }) {
   const [authorId, setAuthorId] = useState("");
   const [file, setFile] = useState();
 
-  // const { setData, authors, categories } = useContext(StateContex);
   const { authors, categories, getAuthors, getCategories, getBooks } =
     useContext(StateContex);
   const { user, isAdmin, isAuthor } = useContext(AuthContext);

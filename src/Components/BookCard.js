@@ -36,7 +36,7 @@ function BookCard({ book }) {
         >
           <Card
             sx={{
-              maxWidth: 400,
+              maxWidth: 800,
               minHeight: 600,
               display: "flex",
               flexDirection: "column",
@@ -45,8 +45,8 @@ function BookCard({ book }) {
               backgroundColor: "#d4b996",
               border: "3px solid brown",
               boxSizing: "border-box",
-              padding: 2,
-              margin: 2,
+              padding: 1,
+              margin: 1,
               borderRadius: "8px",
             }}
           >
@@ -55,6 +55,7 @@ function BookCard({ book }) {
                 component="img"
                 alt={book.title}
                 height="auto"
+                width="auto"
                 image={imageUrl}
                 title={book.title}
                 sx={{ maxHeight: "300px", overflow: "auto" }}

@@ -53,7 +53,8 @@ function AddAuthorModal({ isOpen, onClose, onSubmit }) {
             value={password}
             onChange={(e) => setPassword(e.target.value)}
             required
-            placeholder="password"
+            placeholder="Password, hover of the field for info"
+            title="Passord must contain at least one uppercase and one symbol"
           />
 
           <input
