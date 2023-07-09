@@ -26,7 +26,11 @@ function BookCard({ book }) {
   return (
     <div>
       <button onClick={handleOpenModal}>{book.title}</button>
-      <Modal isOpen={isModalOpen} onClose={handleCloseModal}>
+      <Modal
+        isOpen={isModalOpen}
+        onClose={handleCloseModal}
+        contentType={"bookCard"}
+      >
         <Box
           display="flex"
           justifyContent="center"
@@ -36,21 +40,19 @@ function BookCard({ book }) {
         >
           <Card
             sx={{
-              maxWidth: 800,
-              minHeight: 600,
               display: "flex",
               flexDirection: "column",
               justifyContent: "center",
               alignItems: "center",
               backgroundColor: "#d4b996",
-              border: "3px solid brown",
+              border: "12px solid brown",
               boxSizing: "border-box",
-              padding: 1,
-              margin: 1,
-              borderRadius: "8px",
+              padding: 8,
+              margin: 0,
+              borderRadius: "12px",
             }}
           >
-            <CardActionArea>
+            <CardActionArea sx={{ border: "4px solid brown" }}>
               <CardMedia
                 component="img"
                 alt={book.title}
